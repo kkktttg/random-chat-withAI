@@ -137,12 +137,8 @@ async function tryAiFindBatchMatch(
   const elapsed = Date.now() - me.joinedAt;
   if (elapsed < BATCH_MATCH_INTERVAL_MS) return null;
 
-  // Find another eligible user to pair with
-  const eligible = queue.filter(
-    (e) =>
-      e.sessionId !== sessionId &&
-      Date.now() - e.joinedAt >= BATCH_MATCH_INTERVAL_MS
-  );
+  // Find other users in queue (partner doesn't need to have waited 30s)
+  const eligible = queue.filter((e) => e.sessionId !== sessionId);
 
   const useAi =
     eligible.length === 0 || Math.random() < AI_FIND_AI_PROBABILITY;

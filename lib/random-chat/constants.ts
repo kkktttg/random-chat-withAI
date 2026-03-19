@@ -38,4 +38,4 @@ export const AI_FIND_TOTAL_TURNS = 5;
 export const AI_RESPONSE_MIN_DELAY_MS = 5000;
 export const AI_RESPONSE_MAX_DELAY_MS = 10000;
 export const KV_TTL_SECONDS = 3600;
-export const AI_FIND_AI_PROBABILITY = 0.5;
+export const AI_FIND_AI_PROBABILITY = 0.3;
