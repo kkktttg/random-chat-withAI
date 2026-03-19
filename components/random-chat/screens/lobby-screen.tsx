@@ -25,23 +25,6 @@ export function LobbyScreen() {
       {/* Mode Buttons */}
       <div className="flex flex-col gap-3 w-full">
         <button
-          className="border rounded-lg p-4 text-left bg-muted/50 hover:bg-muted transition-colors"
-          onClick={() => dispatch({ type: "START_MATCHING", mode: "free" })}
-          aria-label="AI와 대화하기"
-        >
-          <div className="flex items-center gap-3">
-            <MessageCircle className="w-6 h-6 flex-shrink-0" />
-            <div className="flex-1">
-              <p className="text-sm font-bold">AI와 대화하기</p>
-              <p className="text-xs text-muted-foreground">
-                AI와 자유롭게 대화하기
-              </p>
-            </div>
-            <ChevronRight className="w-4 h-4 text-muted-foreground" />
-          </div>
-        </button>
-
-        <button
           className="border-2 rounded-lg p-4 text-left bg-background hover:bg-muted/30 transition-colors"
           onClick={() => dispatch({ type: "START_MATCHING", mode: "ai-find" })}
           aria-label="AI 찾기"
@@ -52,6 +35,23 @@ export function LobbyScreen() {
               <p className="text-sm font-bold">AI 찾기</p>
               <p className="text-xs text-muted-foreground">
                 상대가 AI인지 사람인지 판별하기
+              </p>
+            </div>
+            <ChevronRight className="w-4 h-4 text-muted-foreground" />
+          </div>
+        </button>
+
+        <button
+          className="border rounded-lg p-4 text-left bg-muted/50 hover:bg-muted transition-colors"
+          onClick={() => dispatch({ type: "START_MATCHING", mode: "free" })}
+          aria-label="AI와 대화하기"
+        >
+          <div className="flex items-center gap-3">
+            <MessageCircle className="w-6 h-6 flex-shrink-0" />
+            <div className="flex-1">
+              <p className="text-sm font-bold">AI와 대화하기</p>
+              <p className="text-xs text-muted-foreground">
+                AI와 자유롭게 대화하기
               </p>
             </div>
             <ChevronRight className="w-4 h-4 text-muted-foreground" />
