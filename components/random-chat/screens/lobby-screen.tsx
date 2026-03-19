@@ -8,7 +8,7 @@ export function LobbyScreen() {
   const initial = state.myNickname.charAt(3) || "?";
 
   return (
-    <div className="p-6 flex flex-col items-center gap-6">
+    <div className="relative p-6 flex flex-col items-center gap-6">
       {/* Nickname */}
       <div className="flex flex-col items-center gap-1">
         <div className="rounded-full flex items-center justify-center text-sm font-bold w-14 h-14 bg-muted border-2">
@@ -62,6 +62,10 @@ export function LobbyScreen() {
       <p className="text-xs text-center text-muted-foreground">
         대화가 끝나면 모든 채팅 기록은 삭제됩니다
       </p>
+
+      <span className="absolute bottom-3 right-4 text-[10px] text-muted-foreground/50 font-mono select-none">
+        {process.env.NEXT_PUBLIC_GIT_COMMIT}
+      </span>
     </div>
   );
 }
