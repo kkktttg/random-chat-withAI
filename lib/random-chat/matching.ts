@@ -5,6 +5,7 @@ import {
   BATCH_MATCH_INTERVAL_MS,
   AI_FIND_AI_PROBABILITY,
   KV_TTL_SECONDS,
+  AI_PERSONALITIES,
 } from "./constants";
 import { generateNickname } from "./nickname";
 
@@ -80,13 +81,14 @@ async function tryFreeMatch(
   // Always match with AI immediately
   const matchId = crypto.randomUUID();
   const aiNickname = randomAiNickname();
+  const personality = AI_PERSONALITIES[Math.floor(Math.random() * AI_PERSONALITIES.length)].prompt;
 
   const matchData: MatchData = {
     matchId,
     mode: "free",
     participants: [
       { sessionId: me.sessionId, nickname: me.nickname, isAi: false },
-      { sessionId: "ai", nickname: aiNickname, isAi: true },
+      { sessionId: "ai", nickname: aiNickname, isAi: true, personality },
     ],
     createdAt: Date.now(),
   };
@@ -120,12 +122,13 @@ async function tryAiFindBatchMatch(
 
   if (useAi || eligible.length === 0) {
     const aiNickname = randomAiNickname();
+    const personality = AI_PERSONALITIES[Math.floor(Math.random() * AI_PERSONALITIES.length)].prompt;
     const matchData: MatchData = {
       matchId,
       mode: "ai-find",
       participants: [
         { sessionId: me.sessionId, nickname: me.nickname, isAi: false },
-        { sessionId: "ai", nickname: aiNickname, isAi: true },
+        { sessionId: "ai", nickname: aiNickname, isAi: true, personality },
       ],
       createdAt: Date.now(),
     };

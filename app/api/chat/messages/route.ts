@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { kv } from "@vercel/kv";
 import { kvKeys, MatchData } from "@/lib/random-chat/kv-schema";
 import { Message } from "@/lib/random-chat/types";
-import { INACTIVITY_TIMEOUT_MS, KV_TTL_SECONDS } from "@/lib/random-chat/constants";
+import { INACTIVITY_TIMEOUT_MS, KV_TTL_SECONDS, AI_PERSONALITIES } from "@/lib/random-chat/constants";
 
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
@@ -37,6 +37,7 @@ export async function GET(request: NextRequest) {
         // Switch partner to AI
         partner.isAi = true;
         partner.sessionId = "ai";
+        partner.personality = AI_PERSONALITIES[Math.floor(Math.random() * AI_PERSONALITIES.length)].prompt;
         match.partnerSwitchedAt = Date.now();
         await kv.set(kvKeys.match(matchId), JSON.stringify(match), {
           ex: KV_TTL_SECONDS,

@@ -43,7 +43,7 @@ export async function POST(request: NextRequest) {
   // If partner is AI, generate AI response asynchronously
   if (partner?.isAi) {
     const isAiFind = match.mode === "ai-find";
-    generateAiReply(matchId, sessionId, text, isAiFind);
+    generateAiReply(matchId, sessionId, text, isAiFind, partner.personality);
   }
 
   return NextResponse.json({ messageId });
@@ -53,7 +53,8 @@ async function generateAiReply(
   matchId: string,
   userSessionId: string,
   userText: string,
-  isAiFind: boolean
+  isAiFind: boolean,
+  personality?: string
 ) {
   try {
     // Get conversation history for context
@@ -69,7 +70,7 @@ async function generateAiReply(
       content: m.text,
     }));
 
-    const aiText = await streamAiResponse(glmMessages, isAiFind);
+    const aiText = await streamAiResponse(glmMessages, isAiFind, personality);
 
     const aiMessage: Message = {
       id: crypto.randomUUID(),

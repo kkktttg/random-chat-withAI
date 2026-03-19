@@ -6,7 +6,8 @@ import {
 const GLM_API_URL =
   "https://api.z.ai/api/coding/paas/v4/chat/completions";
 
-const SYSTEM_PROMPT = `당신은 랜덤채팅에서 대화하는 한국인입니다.
+function buildSystemPrompt(personality?: string): string {
+  let prompt = `당신은 랜덤채팅에서 대화하는 한국인입니다.
 규칙:
 - 반드시 한국어로 대화하세요
 - 캐주얼하고 자연스럽게 대화하세요 (존댓말/반말 혼용 가능)
@@ -14,6 +15,11 @@ const SYSTEM_PROMPT = `당신은 랜덤채팅에서 대화하는 한국인입니
 - 사람처럼 짧고 자연스러운 응답을 하세요 (1~3문장)
 - 이모지를 적당히 사용해도 됩니다
 - 상대방의 말에 공감하고 반응하세요`;
+  if (personality) {
+    prompt += `\n\n당신의 성격과 말투:\n${personality}`;
+  }
+  return prompt;
+}
 
 export interface GlmMessage {
   role: "user" | "assistant" | "system";
@@ -22,7 +28,8 @@ export interface GlmMessage {
 
 export async function getAiResponse(
   messages: GlmMessage[],
-  applyDelay = true
+  applyDelay = true,
+  personality?: string
 ): Promise<string> {
   const apiKey = process.env.GLM_API_KEY;
   if (!apiKey) {
@@ -43,9 +50,9 @@ export async function getAiResponse(
       Authorization: `Bearer ${apiKey}`,
     },
     body: JSON.stringify({
-      model: "glm-4.6",
-      messages: [{ role: "system", content: SYSTEM_PROMPT }, ...messages],
-      max_tokens: 1500,
+      model: "glm-4.5-flash",
+      messages: [{ role: "system", content: buildSystemPrompt(personality) }, ...messages],
+      max_tokens: 300,
       temperature: 0.9,
     }),
   });
@@ -61,7 +68,8 @@ export async function getAiResponse(
 
 export async function streamAiResponse(
   messages: GlmMessage[],
-  applyDelay = true
+  applyDelay = true,
+  personality?: string
 ): Promise<string> {
   const apiKey = process.env.GLM_API_KEY;
   if (!apiKey) {
@@ -82,9 +90,9 @@ export async function streamAiResponse(
       Authorization: `Bearer ${apiKey}`,
     },
     body: JSON.stringify({
-      model: "glm-4.6",
-      messages: [{ role: "system", content: SYSTEM_PROMPT }, ...messages],
-      max_tokens: 1500,
+      model: "glm-4.5-flash",
+      messages: [{ role: "system", content: buildSystemPrompt(personality) }, ...messages],
+      max_tokens: 300,
       temperature: 0.9,
       stream: true,
     }),

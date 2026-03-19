@@ -27,6 +27,7 @@ export interface MatchData {
     sessionId: string;
     nickname: string;
     isAi: boolean;
+    personality?: string;
   }>;
   createdAt: number;
   partnerSwitchedAt?: number;
