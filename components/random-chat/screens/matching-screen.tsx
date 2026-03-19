@@ -35,9 +35,9 @@ export function MatchingScreen() {
 
   // Join the queue when mounting
   useEffect(() => {
-    if (!state.sessionId || !state.mode) return;
-    apiClient.joinMatch(state.sessionId, state.mode).catch(() => {});
-  }, [state.sessionId, state.mode]);
+    if (!state.sessionId || !state.myNickname || !state.mode) return;
+    apiClient.joinMatch(state.sessionId, state.myNickname, state.mode).catch(() => {});
+  }, [state.sessionId, state.myNickname, state.mode]);
 
   return (
     <div className="flex flex-col items-center justify-center gap-4 p-8 min-h-[240px]">

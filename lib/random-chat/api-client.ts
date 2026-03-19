@@ -28,10 +28,10 @@ export const apiClient = {
     return fetchJson("/api/session", { method: "POST" });
   },
 
-  joinMatch(sessionId: string, mode: ChatMode): Promise<MatchJoinResponse> {
+  joinMatch(sessionId: string, nickname: string, mode: ChatMode): Promise<MatchJoinResponse> {
     return fetchJson("/api/match/join", {
       method: "POST",
-      body: JSON.stringify({ sessionId, mode }),
+      body: JSON.stringify({ sessionId, nickname, mode }),
     });
   },
 

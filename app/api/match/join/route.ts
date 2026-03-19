@@ -2,22 +2,21 @@ import { NextRequest, NextResponse } from "next/server";
 import { joinQueue } from "@/lib/random-chat/matching";
 import { kv } from "@vercel/kv";
 import { kvKeys } from "@/lib/random-chat/kv-schema";
+import { KV_TTL_SECONDS } from "@/lib/random-chat/constants";
 
 export async function POST(request: NextRequest) {
-  const { sessionId, mode } = await request.json();
+  const { sessionId, nickname, mode } = await request.json();
 
-  if (!sessionId || !mode) {
+  if (!sessionId || !nickname || !mode) {
     return NextResponse.json({ error: "Missing fields" }, { status: 400 });
   }
 
-  // Get nickname from session
-  const sessionRaw = await kv.get<string>(kvKeys.session(sessionId));
-  if (!sessionRaw) {
-    return NextResponse.json({ error: "Session not found" }, { status: 404 });
-  }
-
-  const session =
-    typeof sessionRaw === "string" ? JSON.parse(sessionRaw) : sessionRaw;
+  // Upsert session in KV (client generates sessionId locally)
+  await kv.set(
+    kvKeys.session(sessionId),
+    JSON.stringify({ sessionId, nickname, createdAt: Date.now() }),
+    { ex: KV_TTL_SECONDS }
+  );
 
   // Check if already in queue (avoid duplicates)
   const queueKey = kvKeys.queue(mode);
@@ -28,7 +27,7 @@ export async function POST(request: NextRequest) {
   });
 
   if (!alreadyInQueue) {
-    await joinQueue(sessionId, session.nickname, mode);
+    await joinQueue(sessionId, nickname, mode);
   }
 
   return NextResponse.json({ queued: true });
