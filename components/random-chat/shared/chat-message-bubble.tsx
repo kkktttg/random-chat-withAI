@@ -18,6 +18,16 @@ export function ChatMessageBubble({
   isOwn,
   partnerInitial = "?",
 }: ChatMessageBubbleProps) {
+  if (message.senderId === "system") {
+    return (
+      <div className="flex justify-center my-1">
+        <span className="text-xs text-muted-foreground bg-muted px-3 py-1 rounded-full">
+          {message.text}
+        </span>
+      </div>
+    );
+  }
+
   if (isOwn) {
     return (
       <div className="flex items-end gap-2 justify-end">

@@ -29,6 +29,7 @@ export interface MatchData {
     isAi: boolean;
   }>;
   createdAt: number;
+  partnerSwitchedAt?: number;
 }
 
 export interface AiFindState {
