@@ -42,16 +42,7 @@ export async function GET(request: NextRequest) {
           ex: KV_TTL_SECONDS,
         });
 
-        // Insert system notice message
-        const notice: Message = {
-          id: crypto.randomUUID(),
-          senderId: "system",
-          text: "상대방이 응답하지 않아 AI로 교체되었습니다.",
-          timestamp: Date.now(),
-        };
-        await kv.rpush(kvKeys.messages(matchId), JSON.stringify(notice));
-        await kv.expire(kvKeys.messages(matchId), KV_TTL_SECONDS);
-        messages.push(notice);
+        // Silent switch — no notice message
       }
     }
   }

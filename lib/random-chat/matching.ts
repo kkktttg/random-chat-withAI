@@ -74,54 +74,27 @@ async function tryFreeMatch(
   const rawItems = await kv.lrange(queueKey, 0, -1);
   const queue = rawItems.map(parseEntry);
 
-  const myIndex = queue.findIndex((e) => e.sessionId === sessionId);
-  if (myIndex === -1) return null;
+  const me = queue.find((e) => e.sessionId === sessionId);
+  if (!me) return null;
 
-  const me = queue[myIndex];
-  const other = queue.find((e) => e.sessionId !== sessionId);
+  // Always match with AI immediately
+  const matchId = crypto.randomUUID();
+  const aiNickname = randomAiNickname();
 
-  if (other) {
-    const matchId = crypto.randomUUID();
-    const matchData: MatchData = {
-      matchId,
-      mode: "free",
-      participants: [
-        { sessionId: me.sessionId, nickname: me.nickname, isAi: false },
-        { sessionId: other.sessionId, nickname: other.nickname, isAi: false },
-      ],
-      createdAt: Date.now(),
-    };
+  const matchData: MatchData = {
+    matchId,
+    mode: "free",
+    participants: [
+      { sessionId: me.sessionId, nickname: me.nickname, isAi: false },
+      { sessionId: "ai", nickname: aiNickname, isAi: true },
+    ],
+    createdAt: Date.now(),
+  };
 
-    await createMatch(matchData, [me.sessionId, other.sessionId]);
-    await kv.lrem(queueKey, 0, JSON.stringify(me));
-    await kv.lrem(queueKey, 0, JSON.stringify(other));
+  await createMatch(matchData, [me.sessionId]);
+  await kv.lrem(queueKey, 0, JSON.stringify(me));
 
-    return { matchId, partnerNickname: other.nickname };
-  }
-
-  // Check for timeout → AI match
-  const elapsed = Date.now() - me.joinedAt;
-  if (elapsed >= FREE_MATCH_TIMEOUT_MS) {
-    const matchId = crypto.randomUUID();
-    const aiNickname = randomAiNickname();
-
-    const matchData: MatchData = {
-      matchId,
-      mode: "free",
-      participants: [
-        { sessionId: me.sessionId, nickname: me.nickname, isAi: false },
-        { sessionId: "ai", nickname: aiNickname, isAi: true },
-      ],
-      createdAt: Date.now(),
-    };
-
-    await createMatch(matchData, [me.sessionId]);
-    await kv.lrem(queueKey, 0, JSON.stringify(me));
-
-    return { matchId, partnerNickname: aiNickname };
-  }
-
-  return null;
+  return { matchId, partnerNickname: aiNickname };
 }
 
 async function tryAiFindBatchMatch(

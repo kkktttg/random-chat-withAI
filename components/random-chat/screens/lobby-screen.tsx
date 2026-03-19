@@ -27,14 +27,14 @@ export function LobbyScreen() {
         <button
           className="border rounded-lg p-4 text-left bg-muted/50 hover:bg-muted transition-colors"
           onClick={() => dispatch({ type: "START_MATCHING", mode: "free" })}
-          aria-label="자유 랜덤채팅"
+          aria-label="AI와 대화하기"
         >
           <div className="flex items-center gap-3">
             <MessageCircle className="w-6 h-6 flex-shrink-0" />
             <div className="flex-1">
-              <p className="text-sm font-bold">자유 랜덤채팅</p>
+              <p className="text-sm font-bold">AI와 대화하기</p>
               <p className="text-xs text-muted-foreground">
-                랜덤으로 매칭되어 자유롭게 대화
+                AI와 자유롭게 대화하기
               </p>
             </div>
             <ChevronRight className="w-4 h-4 text-muted-foreground" />

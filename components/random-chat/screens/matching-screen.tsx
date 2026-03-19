@@ -42,11 +42,13 @@ export function MatchingScreen() {
   return (
     <div className="flex flex-col items-center justify-center gap-4 p-8 min-h-[240px]">
       <Loader className="w-8 h-8 text-muted-foreground animate-spin" />
-      <p className="text-sm font-bold">상대를 찾고 있습니다...</p>
+      <p className="text-sm font-bold">
+        {isAiFind ? "상대를 찾고 있습니다..." : "AI와 연결 중입니다..."}
+      </p>
       <p className="text-xs text-center text-muted-foreground">
         {isAiFind
           ? "30초마다 대기자끼리 매칭됩니다\n짝이 없으면 AI와 연결됩니다"
-          : "대기자가 있으면 바로 매칭됩니다\n없으면 잠시 후 AI와 연결됩니다"}
+          : "잠시만 기다려주세요"}
       </p>
       <Button
         variant="outline"
