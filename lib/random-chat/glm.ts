@@ -4,7 +4,7 @@ import {
 } from "./constants";
 
 const GLM_API_URL =
-  "https://open.bigmodel.cn/api/paas/v4/chat/completions";
+  "https://api.z.ai/api/coding/paas/v4/chat/completions";
 
 const SYSTEM_PROMPT = `당신은 랜덤채팅에서 대화하는 한국인입니다.
 규칙:
@@ -43,15 +43,16 @@ export async function getAiResponse(
       Authorization: `Bearer ${apiKey}`,
     },
     body: JSON.stringify({
-      model: "glm-4-flash",
+      model: "glm-4.6",
       messages: [{ role: "system", content: SYSTEM_PROMPT }, ...messages],
-      max_tokens: 200,
+      max_tokens: 1500,
       temperature: 0.9,
     }),
   });
 
   if (!response.ok) {
-    throw new Error(`GLM API error: ${response.status}`);
+    const errText = await response.text();
+    throw new Error(`GLM API error: ${response.status} ${errText}`);
   }
 
   const data = await response.json();
@@ -81,16 +82,17 @@ export async function streamAiResponse(
       Authorization: `Bearer ${apiKey}`,
     },
     body: JSON.stringify({
-      model: "glm-4-flash",
+      model: "glm-4.6",
       messages: [{ role: "system", content: SYSTEM_PROMPT }, ...messages],
-      max_tokens: 200,
+      max_tokens: 1500,
       temperature: 0.9,
       stream: true,
     }),
   });
 
   if (!response.ok) {
-    throw new Error(`GLM API error: ${response.status}`);
+    const errText = await response.text();
+    throw new Error(`GLM API error: ${response.status} ${errText}`);
   }
 
   const reader = response.body?.getReader();
